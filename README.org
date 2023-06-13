@@ -1,0 +1,46 @@
+* astro-mode
+A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 29.
+
+** Installation
+*** MELPA
+Coming as soon as I figure out how to deploy a package to MELPA.
+*** Manual
+Clone this repo anywhere you want, probably somewhere in =~/.emacs.d= . Then, add the directory to your =load-path=.
+
+For example:
+#+begin_example
+  cd ~/.emacs.d
+  git clone https://github.com/Sorixelle/astro-mode.git
+#+end_example
+
+Then, in =init.el=:
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (concat user-emacs-directory "astro-mode"))
+  (require 'astro-mode)
+#+end_src
+** Setup
+The first time you open a =.astro= file, or =(require 'astro-mode)=, you'll likely get an warning such as the following:
+
+: Cannot activate tree-sitter, because language grammar for astro is unavailable
+
+Because this major mode is powered by [[https://tree-sitter.github.io/tree-sitter/][Tree-sitter]], it depends on an external grammar to provide a syntax tree for Astro templates. To set it up, you'll need to set =treesit-language-source-alist= to point to the correct repositories for each language. At a minimum, you'll need to specify =astro=, =tsx= and =css=, like so:
+#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+        '((astro "https://github.com/virchau13/tree-sitter-astro")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
+#+end_src
+
+Once that's been setup, you'll need to run =treesit-install-language-grammar= once for each language in the list. You can do this interactively (=M-x=), or by evaluating this snippet:
+#+begin_src emacs-lisp
+  (mapc #'treesit-install-language-grammar '(astro css tsx))
+#+end_src
+
+Make sure you have a working C compiler as =cc= in your PATH, since this needs to compile the grammars.
+** Customization
+You can use these variables to customize the behaviour of astro-mode:
+
+- =astro-mode-indent-offset= :: Number of spaces for each indentation step. Defaults to 2.
+** Credits
+- [[https://github.com/virchau13][virchau13]] for [[https://github.com/virchau13/tree-sitter-astro][tree-sitter-astro]], the Tree-sitter grammar this major mode is built on
+- The [[https://astro.build/][Astro team]] for the framework this mode is built for
