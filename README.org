@@ -19,7 +19,7 @@ Then, in =init.el=:
   (require 'astro-mode)
 #+end_src
 ** Setup
-The first time you open a =.astro= file, or =(require 'astro-mode)=, you'll likely get an warning such as the following:
+The first time you open a =.astro= file, or =(require 'astro-mode)=, you'll likely get a warning such as the following:
 
 : Cannot activate tree-sitter, because language grammar for astro is unavailable
 
