@@ -5,7 +5,7 @@
 ;; Author: Ruby Iris Juric <ruby@srxl.me>
 ;; Homepage: https://github.com/Sorixelle/astro-mode
 ;; Version: 1.0.0
-;; Package-Requires: ((emacs "29") typescript-ts-mode css-mode)
+;; Package-Requires: ((emacs "29"))
 ;; Keywords: languages
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -38,14 +38,14 @@
 (require 'typescript-ts-mode)
 (require 'css-mode)
 
-(defgroup astro-mode ()
+(defgroup astro ()
   "Major mode for editing Astro templates."
   :group 'languages)
 
 (defcustom astro-mode-indent-offset 2
   "Number of spaces for each indentation step in `astro-mode'."
   :type 'integer
-  :group 'astro-mode
+  :group 'astro
   :package-version '(astro-mode . "1.0.0"))
 
 (defvar astro-mode--indent-rules
@@ -145,7 +145,7 @@ Return nil if there is no name or if NODE is not a defun node."
 ;;;###autoload
 (define-derived-mode astro-mode html-mode "Astro"
   "Major mode for editing Astro templates, powered by tree-sitter."
-  :group 'astro-mode
+  :group 'astro
 
   (unless (treesit-ready-p 'astro)
     (error "Tree-sitter grammar for Astro isn't available"))
