@@ -66,7 +66,7 @@
   "Tree-sitter indentation rules for `astro-mode'.")
 
 (defun astro-mode--prefix-font-lock-features (prefix settings)
-  "Prefixes the font lock features in SETTINGS with PREFIX."
+  "Prefix with PREFIX the font lock features in SETTINGS."
   (mapcar (lambda (setting)
             (list (nth 0 setting)
                   (nth 1 setting)
@@ -110,10 +110,11 @@
    :host 'astro
    '((frontmatter (raw_text) @cap)
      ;; TODO: this doesn't really parse correctly, because emacs' tree-sitter
-     ;; integration just shoves everything in the same language into one long
-     ;; chunk to parse, instead of parsing each range individually. syntax
-     ;; highlighting doesn't look awful with it though, so i'm leaving it in for
-     ;; now. better than nothing. need to investigate alternatives though
+     ;;       integration just shoves everything in the same language into one
+     ;;       long chunk to parse, instead of parsing each range individually.
+     ;;       syntax highlighting doesn't look awful with it though, so i'm
+     ;;       leaving it in for now. better than nothing. need to investigate
+     ;;       alternatives though.
      (interpolation (raw_text) @cap))
 
    :embed 'css
