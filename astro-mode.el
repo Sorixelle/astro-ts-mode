@@ -121,6 +121,25 @@
    :host 'astro
    '((style_element (raw_text) @cap))))
 
+(defvar-local astro-mode--should-do-treesit-workaround nil
+  "Controls whether `treesit-buffer-root-node' should be advised to work around
+a syntax highlighting bug.
+
+See comment on advice-add in astro-mode.el for more details.")
+
+(defun astro-mode--advice-for-treesit-buffer-root-node (&optional lang)
+  "Returns the current ranges for the LANG parser in the current buffer.
+
+If LANG is omitted, return ranges for the first language in the parser list.
+
+If `astro-mode--should-do-treesit-workaround' is nil, or if LANG is 'astro, this
+function instead always returns `t'."
+  (if (or (eq lang 'astro) (not astro-mode--should-do-treesit-workaround))
+    t
+    (treesit-parser-included-ranges
+     (treesit-parser-create
+      (or lang (treesit-parser-language (car (treesit-parser-list))))))))
+
 (defun astro-mode--defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
@@ -185,10 +204,30 @@ Return nil if there is no name or if NODE is not a defun node."
               treesit-language-at-point-function
               #'astro-mode--treesit-language-at-point)
 
+  (setq-local astro-mode--should-do-treesit-workaround t)
+
   (treesit-major-mode-setup))
 
 (if (treesit-ready-p 'astro)
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode)))
+
+;; HACK: treesit-buffer-root-node seems to be returning a node spanning the
+;;       whole file if treesit-parser-included-ranges returns nil for that
+;;       language (ie. that language doesn't appear in the file). This screws
+;;       with font locking, causing CSS syntax highlighting to be applied over
+;;       the whole file if there's no <style> tag. To work around this, we
+;;       advise treesit-buffer-root-node to make it return nil if there's no
+;;       range for the language, instead of a node covering the file. I haven't
+;;       seen any adverse effects come out of this, and I've done my best to
+;;       make sure this stays isolated to astro-mode buffers, so hopefully
+;;       nothing explodes too hard. I feel like this is a bug in treesit tbh,
+;;       I'll have to report it there. But yeah, I'm so sorry about this. This
+;;       is awful, I know. I hate it too. I don't know what else to do though.
+;;;###autoload
+(advice-add
+ #'treesit-buffer-root-node
+ :before-while
+ #'astro-mode--advice-for-treesit-buffer-root-node)
 
 (provide 'astro-mode)
 ;;; astro-mode.el ends here
