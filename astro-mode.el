@@ -208,6 +208,7 @@ Return nil if there is no name or if NODE is not a defun node."
 
   (treesit-major-mode-setup))
 
+;;;###autoload
 (if (treesit-ready-p 'astro)
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode)))
 
