@@ -116,7 +116,8 @@
      ;;       syntax highlighting doesn't look awful with it though, so i'm
      ;;       leaving it in for now. better than nothing. need to investigate
      ;;       alternatives though.
-     (interpolation (raw_text) @cap))
+     (interpolation (raw_text) @cap)
+     (script_element (raw_text) @cap))
 
    :embed 'css
    :host 'astro
