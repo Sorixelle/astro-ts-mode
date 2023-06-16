@@ -102,7 +102,13 @@
 
     :language 'astro
     :feature 'astro-bracket
-    '((["<" ">" "</" "/>" "{" "}"]) @font-lock-bracket-face)))
+    '((["<" ">" "</" "/>" "{" "}"]) @font-lock-bracket-face)
+
+    :language 'tsx
+    :feature 'astro-bracket
+    '((jsx_opening_element (["<" ">"]) @font-lock-bracket-face)
+      (jsx_closing_element (["<" ">" "/"]) @font-lock-bracket-face)
+      (jsx_self_closing_element (["<" ">" "/"]) @font-lock-bracket-face))))
   "Tree-sitter font-lock settings for `astro-mode'.")
 
 (defvar astro-mode--range-settings
