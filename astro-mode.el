@@ -123,20 +123,14 @@
    :host 'astro
    '((style_element (raw_text) @cap))))
 
-(defvar-local astro-mode--should-do-treesit-workaround nil
-  "Controls whether `treesit-buffer-root-node' should be advised to work around
-a syntax highlighting bug.
-
-See comment on advice-add in astro-mode.el for more details.")
-
 (defun astro-mode--advice-for-treesit-buffer-root-node (&optional lang)
   "Returns the current ranges for the LANG parser in the current buffer.
 
 If LANG is omitted, return ranges for the first language in the parser list.
 
-If `astro-mode--should-do-treesit-workaround' is nil, or if LANG is 'astro, this
-function instead always returns `t'."
-  (if (or (eq lang 'astro) (not astro-mode--should-do-treesit-workaround))
+If `major-mode' is currently `astro-mode', or if LANG is 'astro, this function
+instead always returns `t'."
+  (if (or (eq lang 'astro) (not (eq major-mode 'astro-mode)))
     t
     (treesit-parser-included-ranges
      (treesit-parser-create
@@ -205,8 +199,6 @@ Return nil if there is no name or if NODE is not a defun node."
   (setq-local treesit-range-settings astro-mode--range-settings
               treesit-language-at-point-function
               #'astro-mode--treesit-language-at-point)
-
-  (setq-local astro-mode--should-do-treesit-workaround t)
 
   (treesit-major-mode-setup))
 
