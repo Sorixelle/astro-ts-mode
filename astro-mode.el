@@ -61,7 +61,8 @@
      ((parent-is "style_element") parent-bol astro-mode-indent-offset)
      ((parent-is "start_tag") parent-bol astro-mode-indent-offset)
      ((parent-is "self_closing_tag") parent-bol astro-mode-indent-offset))
-    (css . ,(alist-get 'css css--treesit-indent-rules))
+    (css . ,(append (alist-get 'css css--treesit-indent-rules)
+                    '(((parent-is "stylesheet") parent-bol 0))))
     (tsx . ,(alist-get 'tsx (typescript-ts-mode--indent-rules 'tsx))))
   "Tree-sitter indentation rules for `astro-mode'.")
 
