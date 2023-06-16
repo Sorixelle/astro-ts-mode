@@ -136,6 +136,11 @@ instead always returns `t'."
      (treesit-parser-create
       (or lang (treesit-parser-language (car (treesit-parser-list))))))))
 
+(defun astro-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
+  "Returns a truthy value if `major-mode' is `astro-mode', and if NEW-RANGES is
+non-nil."
+  (and (eq major-mode 'astro-mode) new-ranges))
+
 (defun astro-mode--defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
@@ -223,6 +228,20 @@ Return nil if there is no name or if NODE is not a defun node."
  #'treesit-buffer-root-node
  :before-while
  #'astro-mode--advice-for-treesit-buffer-root-node)
+
+;; HACK: treesit--merge-ranges doesn't properly account for when new-ranges is
+;;       nil (ie. the code block covering that range was deleted), and returns
+;;       old-ranges when it should probably also be returning nil. As a result,
+;;       syntax highlighting from the old language sticks around and tries to
+;;       apply itself to whatever takes it's place, which is usually a different
+;;       language. This looks weird. We can work around this by advising
+;;       treesit--merge-ranges to just short circuit and return nil if
+;;       new-ranges is also nil. Another bug in treesit to report.
+;;;###autoload
+(advice-add
+ #'treesit--merge-ranges
+ :before-while
+ #'astro-mode--advice-for-treesit--merge-ranges)
 
 (provide 'astro-mode)
 ;;; astro-mode.el ends here
