@@ -129,6 +129,7 @@
    :host 'astro
    '((style_element (raw_text) @cap))))
 
+;;;###autoload
 (defun astro-mode--advice-for-treesit-buffer-root-node (&optional lang)
   "Returns the current ranges for the LANG parser in the current buffer.
 
@@ -142,6 +143,7 @@ instead always returns `t'."
      (treesit-parser-create
       (or lang (treesit-parser-language (car (treesit-parser-list))))))))
 
+;;;###autoload
 (defun astro-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
   "Returns a truthy value if `major-mode' is `astro-mode', and if NEW-RANGES is
 non-nil."
