@@ -131,12 +131,12 @@
 
 ;;;###autoload
 (defun astro-mode--advice-for-treesit-buffer-root-node (&optional lang)
-  "Returns the current ranges for the LANG parser in the current buffer.
+  "Return the current ranges for the LANG parser in the current buffer.
 
 If LANG is omitted, return ranges for the first language in the parser list.
 
 If `major-mode' is currently `astro-mode', or if LANG is 'astro, this function
-instead always returns `t'."
+instead always returns t."
   (if (or (eq lang 'astro) (not (eq major-mode 'astro-mode)))
     t
     (treesit-parser-included-ranges
@@ -145,8 +145,7 @@ instead always returns `t'."
 
 ;;;###autoload
 (defun astro-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
-  "Returns a truthy value if `major-mode' is `astro-mode', and if NEW-RANGES is
-non-nil."
+  "Returns truthy if `major-mode' is `astro-mode', and if NEW-RANGES is non-nil."
   (and (eq major-mode 'astro-mode) new-ranges))
 
 (defun astro-mode--defun-name (node)
