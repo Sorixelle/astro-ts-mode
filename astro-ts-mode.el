@@ -145,7 +145,7 @@ instead always returns t."
 
 ;;;###autoload
 (defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
-  "Returns truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
+  "Return truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
   (and (eq major-mode 'astro-ts-mode) new-ranges))
 
 (defun astro-ts-mode--defun-name (node)
