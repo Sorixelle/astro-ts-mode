@@ -1,10 +1,10 @@
-;;; astro-mode.el --- Major mode for editing Astro templates  -*- lexical-binding: t; -*-
+;;; astro-ts-mode.el --- Major mode for editing Astro templates  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Ruby Iris Juric
 
 ;; Author: Ruby Iris Juric <ruby@srxl.me>
-;; Homepage: https://github.com/Sorixelle/astro-mode
-;; Version: 1.0.0
+;; Homepage: https://github.com/Sorixelle/astro-ts-mode
+;; Version: 2.0.0
 ;; Package-Requires: ((emacs "29"))
 ;; Keywords: languages
 
@@ -28,7 +28,7 @@
 ;; virchau13's tree-sitter grammar for Astro.
 ;;
 ;; More info:
-;; README: https://github.com/Sorixelle/astro-mode
+;; README: https://github.com/Sorixelle/astro-ts-mode
 ;; tree-sitter-astro: https://github.com/virchau13/tree-sitter-astro
 ;; Astro: https://astro.build/
 
@@ -42,13 +42,13 @@
   "Major mode for editing Astro templates."
   :group 'languages)
 
-(defcustom astro-mode-indent-offset 2
-  "Number of spaces for each indentation step in `astro-mode'."
+(defcustom astro-ts-mode-indent-offset 2
+  "Number of spaces for each indentation step in `astro-ts-mode'."
   :type 'integer
   :group 'astro
-  :package-version '(astro-mode . "1.0.0"))
+  :package-version '(astro-ts-mode . "1.0.0"))
 
-(defvar astro-mode--indent-rules
+(defvar astro-ts-mode--indent-rules
   `((astro
      ((parent-is "fragment") column-0 0)
      ((node-is "frontmatter") column-0 0)
@@ -56,17 +56,17 @@
      ((node-is ">") parent-bol 0)
      ((node-is "end_tag") parent-bol 0)
      ((parent-is "comment") prev-adaptive-prefix 0)
-     ((parent-is "element") parent-bol astro-mode-indent-offset)
-     ((parent-is "script_element") parent-bol astro-mode-indent-offset)
-     ((parent-is "style_element") parent-bol astro-mode-indent-offset)
-     ((parent-is "start_tag") parent-bol astro-mode-indent-offset)
-     ((parent-is "self_closing_tag") parent-bol astro-mode-indent-offset))
+     ((parent-is "element") parent-bol astro-ts-mode-indent-offset)
+     ((parent-is "script_element") parent-bol astro-ts-mode-indent-offset)
+     ((parent-is "style_element") parent-bol astro-ts-mode-indent-offset)
+     ((parent-is "start_tag") parent-bol astro-ts-mode-indent-offset)
+     ((parent-is "self_closing_tag") parent-bol astro-ts-mode-indent-offset))
     (css . ,(append (alist-get 'css css--treesit-indent-rules)
                     '(((parent-is "stylesheet") parent-bol 0))))
     (tsx . ,(alist-get 'tsx (typescript-ts-mode--indent-rules 'tsx))))
-  "Tree-sitter indentation rules for `astro-mode'.")
+  "Tree-sitter indentation rules for `astro-ts-mode'.")
 
-(defun astro-mode--prefix-font-lock-features (prefix settings)
+(defun astro-ts-mode--prefix-font-lock-features (prefix settings)
   "Prefix with PREFIX the font lock features in SETTINGS."
   (mapcar (lambda (setting)
             (list (nth 0 setting)
@@ -75,12 +75,12 @@
                   (nth 3 setting)))
           settings))
 
-(defvar astro-mode--font-lock-settings
+(defvar astro-ts-mode--font-lock-settings
   (append
-   (astro-mode--prefix-font-lock-features
+   (astro-ts-mode--prefix-font-lock-features
     "tsx"
     (typescript-ts-mode--font-lock-settings 'tsx))
-   (astro-mode--prefix-font-lock-features "css" css--treesit-settings)
+   (astro-ts-mode--prefix-font-lock-features "css" css--treesit-settings)
    (treesit-font-lock-rules
     :language 'astro
     :feature 'astro-comment
@@ -109,9 +109,9 @@
     '((jsx_opening_element (["<" ">"]) @font-lock-bracket-face)
       (jsx_closing_element (["<" ">" "/"]) @font-lock-bracket-face)
       (jsx_self_closing_element (["<" ">" "/"]) @font-lock-bracket-face))))
-  "Tree-sitter font-lock settings for `astro-mode'.")
+  "Tree-sitter font-lock settings for `astro-ts-mode'.")
 
-(defvar astro-mode--range-settings
+(defvar astro-ts-mode--range-settings
   (treesit-range-rules
    :embed 'tsx
    :host 'astro
@@ -130,31 +130,31 @@
    '((style_element (raw_text) @cap))))
 
 ;;;###autoload
-(defun astro-mode--advice-for-treesit-buffer-root-node (&optional lang)
+(defun astro-ts-mode--advice-for-treesit-buffer-root-node (&optional lang)
   "Return the current ranges for the LANG parser in the current buffer.
 
 If LANG is omitted, return ranges for the first language in the parser list.
 
-If `major-mode' is currently `astro-mode', or if LANG is 'astro, this function
+If `major-mode' is currently `astro-ts-mode', or if LANG is 'astro, this function
 instead always returns t."
-  (if (or (eq lang 'astro) (not (eq major-mode 'astro-mode)))
+  (if (or (eq lang 'astro) (not (eq major-mode 'astro-ts-mode)))
     t
     (treesit-parser-included-ranges
      (treesit-parser-create
       (or lang (treesit-parser-language (car (treesit-parser-list))))))))
 
 ;;;###autoload
-(defun astro-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
-  "Returns truthy if `major-mode' is `astro-mode', and if NEW-RANGES is non-nil."
-  (and (eq major-mode 'astro-mode) new-ranges))
+(defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
+  "Returns truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
+  (and (eq major-mode 'astro-ts-mode) new-ranges))
 
-(defun astro-mode--defun-name (node)
+(defun astro-ts-mode--defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
   (when (equal (treesit-node-type node) "tag_name")
     (treesit-node-text node t)))
 
-(defun astro-mode--treesit-language-at-point (point)
+(defun astro-ts-mode--treesit-language-at-point (point)
   "Return the language at POINT."
   (let* ((range nil)
          (language-in-range
@@ -170,7 +170,7 @@ Return nil if there is no name or if NODE is not a defun node."
     (or language-in-range 'astro)))
 
 ;;;###autoload
-(define-derived-mode astro-mode html-mode "Astro"
+(define-derived-mode astro-ts-mode html-mode "Astro"
   "Major mode for editing Astro templates, powered by tree-sitter."
   :group 'astro
 
@@ -190,11 +190,11 @@ Return nil if there is no name or if NODE is not a defun node."
               (regexp-opt '("comment" "text")))
 
   ;; Indentation rules
-  (setq-local treesit-simple-indent-rules astro-mode--indent-rules
-              css-indent-offset astro-mode-indent-offset)
+  (setq-local treesit-simple-indent-rules astro-ts-mode--indent-rules
+              css-indent-offset astro-ts-mode-indent-offset)
 
   ;; Font locking
-  (setq-local treesit-font-lock-settings astro-mode--font-lock-settings
+  (setq-local treesit-font-lock-settings astro-ts-mode--font-lock-settings
               treesit-font-lock-feature-list
               '((astro-comment astro-keyword astro-definition css-selector
                                css-comment css-query css-keyword tsx-comment
@@ -208,15 +208,15 @@ Return nil if there is no name or if NODE is not a defun node."
                                tsx-delimiter)))
 
   ;; Embedded languages
-  (setq-local treesit-range-settings astro-mode--range-settings
+  (setq-local treesit-range-settings astro-ts-mode--range-settings
               treesit-language-at-point-function
-              #'astro-mode--treesit-language-at-point)
+              #'astro-ts-mode--treesit-language-at-point)
 
   (treesit-major-mode-setup))
 
 ;;;###autoload
 (if (treesit-ready-p 'astro)
-    (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode)))
+    (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-ts-mode)))
 
 ;; HACK: treesit-buffer-root-node seems to be returning a node spanning the
 ;;       whole file if treesit-parser-included-ranges returns nil for that
@@ -226,7 +226,7 @@ Return nil if there is no name or if NODE is not a defun node."
 ;;       advise treesit-buffer-root-node to make it return nil if there's no
 ;;       range for the language, instead of a node covering the file. I haven't
 ;;       seen any adverse effects come out of this, and I've done my best to
-;;       make sure this stays isolated to astro-mode buffers, so hopefully
+;;       make sure this stays isolated to astro-ts-mode buffers, so hopefully
 ;;       nothing explodes too hard. I feel like this is a bug in treesit tbh,
 ;;       I'll have to report it there. But yeah, I'm so sorry about this. This
 ;;       is awful, I know. I hate it too. I don't know what else to do though.
@@ -234,7 +234,7 @@ Return nil if there is no name or if NODE is not a defun node."
 (advice-add
  #'treesit-buffer-root-node
  :before-while
- #'astro-mode--advice-for-treesit-buffer-root-node)
+ #'astro-ts-mode--advice-for-treesit-buffer-root-node)
 
 ;; HACK: treesit--merge-ranges doesn't properly account for when new-ranges is
 ;;       nil (ie. the code block covering that range was deleted), and returns
@@ -248,7 +248,7 @@ Return nil if there is no name or if NODE is not a defun node."
 (advice-add
  #'treesit--merge-ranges
  :before-while
- #'astro-mode--advice-for-treesit--merge-ranges)
+ #'astro-ts-mode--advice-for-treesit--merge-ranges)
 
-(provide 'astro-mode)
-;;; astro-mode.el ends here
+(provide 'astro-ts-mode)
+;;; astro-ts-mode.el ends here

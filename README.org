@@ -1,4 +1,4 @@
-* astro-mode
+* astro-ts-mode
 A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 29.
 
 ** Installation
@@ -10,16 +10,16 @@ Clone this repo anywhere you want, probably somewhere in =~/.emacs.d= . Then, ad
 For example:
 #+begin_example
   cd ~/.emacs.d
-  git clone https://github.com/Sorixelle/astro-mode.git
+  git clone https://github.com/Sorixelle/astro-ts-mode.git
 #+end_example
 
 Then, in =init.el=:
 #+begin_src emacs-lisp
-  (add-to-list 'load-path (concat user-emacs-directory "astro-mode"))
-  (require 'astro-mode)
+  (add-to-list 'load-path (concat user-emacs-directory "astro-ts-mode"))
+  (require 'astro-ts-mode)
 #+end_src
 ** Setup
-The first time you open a =.astro= file, or =(require 'astro-mode)=, you'll likely get a warning such as the following:
+The first time you open a =.astro= file, or =(require 'astro-ts-mode)=, you'll likely get a warning such as the following:
 
 : Cannot activate tree-sitter, because language grammar for astro is unavailable
 
@@ -38,9 +38,9 @@ Once that's been setup, you'll need to run =treesit-install-language-grammar= on
 
 Make sure you have a working C compiler as =cc= in your PATH, since this needs to compile the grammars.
 ** Customization
-You can use these variables to customize the behaviour of astro-mode:
+You can use these variables to customize the behaviour of astro-ts-mode:
 
-- =astro-mode-indent-offset= :: Number of spaces for each indentation step. Defaults to 2.
+- =astro-ts-mode-indent-offset= :: Number of spaces for each indentation step. Defaults to 2.
 ** Credits
 - [[https://github.com/virchau13][virchau13]] for [[https://github.com/virchau13/tree-sitter-astro][tree-sitter-astro]], the Tree-sitter grammar this major mode is built on
 - The [[https://astro.build/][Astro team]] for the framework this mode is built for
