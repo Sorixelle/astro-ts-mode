@@ -1,9 +1,11 @@
 * astro-ts-mode
+[[https://melpa.org/#/astro-ts-mode][file:https://melpa.org/packages/astro-ts-mode-badge.svg]] [[https://stable.melpa.org/#/astro-ts-mode][file:https://stable.melpa.org/packages/astro-ts-mode-badge.svg]]
+
 A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 29.
 
 ** Installation
 *** MELPA
-Coming as soon as I figure out how to deploy a package to MELPA.
+Available as =astro-ts-mode=. Install with your preferred package manager, such as [[https://github.com/radian-software/straight.el][straight.el]].
 *** Manual
 Clone this repo anywhere you want, probably somewhere in =~/.emacs.d= . Then, add the directory to your =load-path=.
 
