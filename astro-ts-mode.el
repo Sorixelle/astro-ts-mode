@@ -129,7 +129,6 @@
    :host 'astro
    '((style_element (raw_text) @cap))))
 
-;;;###autoload
 (defun astro-ts-mode--advice-for-treesit-buffer-root-node (&optional lang)
   "Return the current ranges for the LANG parser in the current buffer.
 
@@ -143,7 +142,6 @@ instead always returns t."
      (treesit-parser-create
       (or lang (treesit-parser-language (car (treesit-parser-list))))))))
 
-;;;###autoload
 (defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
   "Return truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
   (and (eq major-mode 'astro-ts-mode) new-ranges))
@@ -214,7 +212,6 @@ Return nil if there is no name or if NODE is not a defun node."
 
   (treesit-major-mode-setup))
 
-;;;###autoload
 (if (treesit-ready-p 'astro)
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-ts-mode)))
 
@@ -230,7 +227,6 @@ Return nil if there is no name or if NODE is not a defun node."
 ;;       nothing explodes too hard. I feel like this is a bug in treesit tbh,
 ;;       I'll have to report it there. But yeah, I'm so sorry about this. This
 ;;       is awful, I know. I hate it too. I don't know what else to do though.
-;;;###autoload
 (advice-add
  #'treesit-buffer-root-node
  :before-while
@@ -244,7 +240,6 @@ Return nil if there is no name or if NODE is not a defun node."
 ;;       language. This looks weird. We can work around this by advising
 ;;       treesit--merge-ranges to just short circuit and return nil if
 ;;       new-ranges is also nil. Another bug in treesit to report.
-;;;###autoload
 (advice-add
  #'treesit--merge-ranges
  :before-while
