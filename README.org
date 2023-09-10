@@ -38,6 +38,17 @@ Once that's been setup, you'll need to run =treesit-install-language-grammar= on
   (mapc #'treesit-install-language-grammar '(astro css tsx))
 #+end_src
 
+Alternatively, if you're using [[https://github.com/renzmann/treesit-auto][treesit-auto]] to manage tree-sitter grammars for you, you can specify a recipe for it:
+#+begin_src emacs-lisp
+  (let ((astro-recipe (make-treesit-auto-recipe
+                       :lang 'astro
+                       :ts-mode 'astro-ts-mode
+                       :url "https://github.com/virchau13/tree-sitter-astro"
+                       :revision "master"
+                       :source-dir "src")))
+    (add-to-list 'treesit-auto-recipe-list astro-recipe))
+#+end_src
+
 Make sure you have a working C compiler as =cc= in your PATH, since this needs to compile the grammars.
 ** Customization
 You can use these variables to customize the behaviour of astro-ts-mode:
