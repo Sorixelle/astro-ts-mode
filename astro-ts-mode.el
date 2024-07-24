@@ -50,7 +50,7 @@
 
 (defvar astro-ts-mode--indent-rules
   `((astro
-     ((parent-is "fragment") column-0 0)
+     ((parent-is "document") column-0 0)
      ((node-is "frontmatter") column-0 0)
      ((node-is "/>") parent-bol 0)
      ((node-is ">") parent-bol 0)
@@ -115,14 +115,15 @@
   (treesit-range-rules
    :embed 'tsx
    :host 'astro
-   '((frontmatter (raw_text) @cap)
+   '((frontmatter (frontmatter_js_block) @cap)
      ;; TODO: this doesn't really parse correctly, because emacs' tree-sitter
      ;;       integration just shoves everything in the same language into one
      ;;       long chunk to parse, instead of parsing each range individually.
      ;;       syntax highlighting doesn't look awful with it though, so i'm
      ;;       leaving it in for now. better than nothing. need to investigate
      ;;       alternatives though.
-     (interpolation (raw_text) @cap)
+     (attribute_interpolation (attribute_js_expr) @cap)
+     (html_interpolation (permissible_text) @cap)
      (script_element (raw_text) @cap))
 
    :embed 'css
@@ -137,7 +138,7 @@ If LANG is omitted, return ranges for the first language in the parser list.
 If `major-mode' is currently `astro-ts-mode', or if LANG is 'astro, this function
 instead always returns t."
   (if (or (eq lang 'astro) (not (eq major-mode 'astro-ts-mode)))
-    t
+      t
     (treesit-parser-included-ranges
      (treesit-parser-create
       (or lang (treesit-parser-language (car (treesit-parser-list))))))))
