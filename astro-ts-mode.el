@@ -130,19 +130,6 @@
    :host 'astro
    '((style_element (raw_text) @cap))))
 
-(defun astro-ts-mode--advice-for-treesit-buffer-root-node (&optional lang)
-  "Return the current ranges for the LANG parser in the current buffer.
-
-If LANG is omitted, return ranges for the first language in the parser list.
-
-If `major-mode' is currently `astro-ts-mode', or if LANG is 'astro, this function
-instead always returns t."
-  (if (or (eq lang 'astro) (not (eq major-mode 'astro-ts-mode)))
-      t
-    (treesit-parser-included-ranges
-     (treesit-parser-create
-      (or lang (treesit-parser-language (car (treesit-parser-list))))))))
-
 (defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
   "Return truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
   (and (eq major-mode 'astro-ts-mode) new-ranges))
@@ -215,23 +202,6 @@ Return nil if there is no name or if NODE is not a defun node."
 
 (if (treesit-ready-p 'astro)
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-ts-mode)))
-
-;; HACK: treesit-buffer-root-node seems to be returning a node spanning the
-;;       whole file if treesit-parser-included-ranges returns nil for that
-;;       language (ie. that language doesn't appear in the file). This screws
-;;       with font locking, causing CSS syntax highlighting to be applied over
-;;       the whole file if there's no <style> tag. To work around this, we
-;;       advise treesit-buffer-root-node to make it return nil if there's no
-;;       range for the language, instead of a node covering the file. I haven't
-;;       seen any adverse effects come out of this, and I've done my best to
-;;       make sure this stays isolated to astro-ts-mode buffers, so hopefully
-;;       nothing explodes too hard. I feel like this is a bug in treesit tbh,
-;;       I'll have to report it there. But yeah, I'm so sorry about this. This
-;;       is awful, I know. I hate it too. I don't know what else to do though.
-(advice-add
- #'treesit-buffer-root-node
- :before-while
- #'astro-ts-mode--advice-for-treesit-buffer-root-node)
 
 ;; HACK: treesit--merge-ranges doesn't properly account for when new-ranges is
 ;;       nil (ie. the code block covering that range was deleted), and returns
