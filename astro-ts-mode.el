@@ -4,7 +4,7 @@
 
 ;; Author: Ruby Iris Juric <ruby@srxl.me>
 ;; Homepage: https://github.com/Sorixelle/astro-ts-mode
-;; Version: 2.0.0
+;; Version: 2.0.2
 ;; Package-Requires: ((emacs "29"))
 ;; Keywords: languages
 
