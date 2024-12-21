@@ -122,18 +122,18 @@
 
 (defun astro-ts-mode--treesit-language-at-point (point)
   "Return the language at POINT."
-  (let* ((range nil)
-         (language-in-range
-          (cl-loop
-           for parser in (treesit-parser-list)
-           do (setq range
-                    (cl-loop
-                     for range in (treesit-parser-included-ranges parser)
-                     if (and (>= point (car range)) (<= point (cdr range)))
-                     return parser))
-           if range
-           return (treesit-parser-language parser))))
-    (or language-in-range 'astro)))
+  (let* ((node (treesit-node-at point 'astro))
+         (type (treesit-node-type node)))
+    (cond
+     ((string-equal type "raw_text")
+      (let ((parent-type (treesit-node-type (treesit-node-parent node))))
+        (cond
+         ((string-equal parent-type "script_element") 'tsx)
+         ((string-equal parent-type "style_element") 'css))))
+     ((string-equal type "frontmatter_js_block") 'tsx)
+     ((string-equal type "attribute_js_expr") 'tsx)
+     ((string-equal type "permissible_text") 'tsx)
+     (t 'astro))))
 
 ;;;###autoload
 (define-derived-mode astro-ts-mode html-mode "Astro"
