@@ -109,19 +109,15 @@
   (treesit-range-rules
    :embed 'tsx
    :host 'astro
+   :local t
    '((frontmatter (frontmatter_js_block) @cap)
-     ;; TODO: this doesn't really parse correctly, because emacs' tree-sitter
-     ;;       integration just shoves everything in the same language into one
-     ;;       long chunk to parse, instead of parsing each range individually.
-     ;;       syntax highlighting doesn't look awful with it though, so i'm
-     ;;       leaving it in for now. better than nothing. need to investigate
-     ;;       alternatives though.
      (attribute_interpolation (attribute_js_expr) @cap)
      (html_interpolation (permissible_text) @cap)
      (script_element (raw_text) @cap))
 
    :embed 'css
    :host 'astro
+   :local t
    '((style_element (raw_text) @cap))))
 
 (defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
