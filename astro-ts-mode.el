@@ -1,6 +1,6 @@
 ;;; astro-ts-mode.el --- Major mode for editing Astro templates  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023  Ruby Iris Juric
+;; Copyright (C) 2023-2024  Ruby Iris Juric
 
 ;; Author: Ruby Iris Juric <ruby@srxl.me>
 ;; Homepage: https://github.com/Sorixelle/astro-ts-mode
