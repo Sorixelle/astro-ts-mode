@@ -120,16 +120,6 @@
    :local t
    '((style_element (raw_text) @cap))))
 
-(defun astro-ts-mode--advice-for-treesit--merge-ranges (_ new-ranges _ _)
-  "Return truthy if `major-mode' is `astro-ts-mode', and if NEW-RANGES is non-nil."
-  (and (eq major-mode 'astro-ts-mode) new-ranges))
-
-(defun astro-ts-mode--defun-name (node)
-  "Return the defun name of NODE.
-Return nil if there is no name or if NODE is not a defun node."
-  (when (equal (treesit-node-type node) "tag_name")
-    (treesit-node-text node t)))
-
 (defun astro-ts-mode--treesit-language-at-point (point)
   "Return the language at POINT."
   (let* ((range nil)
@@ -192,19 +182,6 @@ Return nil if there is no name or if NODE is not a defun node."
 
 (if (treesit-ready-p 'astro)
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-ts-mode)))
-
-;; HACK: treesit--merge-ranges doesn't properly account for when new-ranges is
-;;       nil (ie. the code block covering that range was deleted), and returns
-;;       old-ranges when it should probably also be returning nil. As a result,
-;;       syntax highlighting from the old language sticks around and tries to
-;;       apply itself to whatever takes it's place, which is usually a different
-;;       language. This looks weird. We can work around this by advising
-;;       treesit--merge-ranges to just short circuit and return nil if
-;;       new-ranges is also nil. Another bug in treesit to report.
-(advice-add
- #'treesit--merge-ranges
- :before-while
- #'astro-ts-mode--advice-for-treesit--merge-ranges)
 
 (provide 'astro-ts-mode)
 ;;; astro-ts-mode.el ends here
