@@ -1,7 +1,7 @@
 * astro-ts-mode
 [[https://melpa.org/#/astro-ts-mode][file:https://melpa.org/packages/astro-ts-mode-badge.svg]] [[https://stable.melpa.org/#/astro-ts-mode][file:https://stable.melpa.org/packages/astro-ts-mode-badge.svg]]
 
-A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 29.
+A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 30.
 
 ** Installation
 *** MELPA
