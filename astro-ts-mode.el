@@ -4,7 +4,7 @@
 
 ;; Author: Ruby Iris Juric <ruby@srxl.me>
 ;; Homepage: https://github.com/Sorixelle/astro-ts-mode
-;; Version: 3.0.0
+;; Version: 3.0.1
 ;; Package-Requires: ((emacs "30"))
 ;; Keywords: languages
 
@@ -61,9 +61,10 @@
      ((parent-is "style_element") parent-bol astro-ts-mode-indent-offset)
      ((parent-is "start_tag") parent-bol astro-ts-mode-indent-offset)
      ((parent-is "self_closing_tag") parent-bol astro-ts-mode-indent-offset))
-    (css . ,(append (alist-get 'css css--treesit-indent-rules)
-                    '(((parent-is "stylesheet") parent-bol 0))))
-    (tsx . ,(alist-get 'tsx (typescript-ts-mode--indent-rules 'tsx))))
+    (css . ,(append '(((parent-is "stylesheet") parent-bol 0))
+                    (alist-get 'css css--treesit-indent-rules)))
+    (tsx . ,(append '(((parent-is "program") parent-bol 0))
+                    (alist-get 'tsx (typescript-ts-mode--indent-rules 'tsx)))))
   "Tree-sitter indentation rules for `astro-ts-mode'.")
 
 (defun astro-ts-mode--prefix-font-lock-features (prefix settings)
