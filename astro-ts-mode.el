@@ -110,7 +110,6 @@
   (treesit-range-rules
    :embed 'tsx
    :host 'astro
-   :local t
    '((frontmatter (frontmatter_js_block) @cap)
      (attribute_interpolation (attribute_js_expr) @cap)
      (html_interpolation (permissible_text) @cap)
@@ -118,7 +117,6 @@
 
    :embed 'css
    :host 'astro
-   :local t
    '((style_element (raw_text) @cap))))
 
 (defun astro-ts-mode--treesit-language-at-point (point)
@@ -150,7 +148,9 @@
   (unless (treesit-ready-p 'tsx)
     (error "Tree-sitter grammar for Typescript/TSX isn't available"))
 
-  (treesit-parser-create 'astro)
+  (treesit-parser-create 'tsx)
+  (treesit-parser-create 'css)
+  (setq-local treesit-primary-parser (treesit-parser-create 'astro))
 
   ;; Comments and text content
   (setq-local treesit-text-type-regexp
