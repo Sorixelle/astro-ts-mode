@@ -3,6 +3,9 @@
 
 A major mode for editing [[https://astro.build/][Astro]] templates. Requires Emacs 30.
 
+* IMPORTANT: Migration notice
+This project has been migrated, and is no longer updated here. It now lives on [[https://git.isincredibly.gay/srxl/astro-ts-mode][my personal Forgejo instance]].
+
 ** Installation
 *** MELPA
 Available as =astro-ts-mode=. Install with your preferred package manager, such as [[https://github.com/radian-software/straight.el][straight.el]].
